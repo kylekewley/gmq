@@ -52,6 +52,9 @@ type Client struct {
 
 	// errorHandler is the error handler.
 	errorHandler ErrorHandler
+
+  // Called upon a successful connection to the mqtt broker
+  connHandler ConnectHandler
 }
 
 // Connect establishes a Network Connection to the Server and
@@ -569,6 +572,10 @@ func (cli *Client) handlePacket(p packet.Packet) error {
 
 // handleCONNACK handles the CONNACK Packet.
 func (cli *Client) handleCONNACK() {
+	// call the handler function
+	if cli.connHandler != nil {
+		cli.connHandler()
+	}
 	// Notify the arrival of the CONNACK Packet if possible.
 	select {
 	case cli.conn.connack <- struct{}{}:
@@ -1120,6 +1127,7 @@ func New(opts *Options) *Client {
 		disconnc:     make(chan struct{}, 1),
 		disconnEndc:  make(chan struct{}),
 		errorHandler: opts.ErrorHandler,
+    connHandler: opts.ConnectHandler,
 	}
 
 	// Launch a goroutine which disconnects the Network Connection.

@@ -4,4 +4,5 @@ package client
 type Options struct {
 	// ErrorHandler is the error handler.
 	ErrorHandler ErrorHandler
+  ConnectHandler ConnectHandler
 }
