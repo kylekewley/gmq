@@ -574,7 +574,7 @@ func (cli *Client) handlePacket(p packet.Packet) error {
 func (cli *Client) handleCONNACK() {
 	// call the handler function
 	if cli.connHandler != nil {
-		cli.connHandler()
+		cli.connHandler(cli)
 	}
 	// Notify the arrival of the CONNACK Packet if possible.
 	select {
